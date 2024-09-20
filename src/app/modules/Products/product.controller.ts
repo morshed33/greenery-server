@@ -9,8 +9,8 @@ const createProduct = catchAsync(async (req, res) => {
     .json(new ApiResponse(true, 201, "Product Created", product))
 })
 
-const getProducts = catchAsync(async (req, res) => {
-  const products = await ProductService.getProducts()
+const getAllProducts = catchAsync(async (req, res) => {
+  const products = await ProductService.getAllProducts(req.query)
   return res
     .status(200)
     .json(
@@ -41,7 +41,7 @@ const deleteProduct = catchAsync(async (req, res) => {
 
 export const ProductController = {
   createProduct,
-  getProducts,
+  getAllProducts,
   getProductById,
   updateProduct,
   deleteProduct,

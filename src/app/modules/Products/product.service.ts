@@ -1,3 +1,4 @@
+import { QueryBuilder } from "../../../builder/QueryBuilder"
 import { TProduct } from "./product.interface"
 import { Product } from "./product.model"
 
@@ -6,8 +7,16 @@ const createProduct = async (product: TProduct) => {
   return newProduct
 }
 
-const getProducts = async () => {
-  const products = await Product.find()
+const getAllProducts = async (payload: Record<string, unknown>) => {
+  const productQuery = new QueryBuilder(Product.find({}), payload)
+  productQuery.search(["title", "description, category"])
+  productQuery.paginate()
+  productQuery.sort()
+  productQuery.fields()
+  productQuery.filter()
+
+  const products = await productQuery.modelQuery
+
   return products
 }
 
@@ -31,7 +40,7 @@ const deleteProduct = async (id: string) => {
 
 export const ProductService = {
   createProduct,
-  getProducts,
+  getAllProducts,
   getProductById,
   updateProduct,
   deleteProduct,

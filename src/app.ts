@@ -9,12 +9,7 @@ import router from "./app/router"
 
 const app: Application = express()
 
-app.use(
-  cors({
-    origin: config.origin,
-    credentials: true,
-  }),
-)
+app.use(cors({ origin: config.origin, credentials: true }))
 
 // Parsing
 app.use(express.json({ limit: "16kb" }))

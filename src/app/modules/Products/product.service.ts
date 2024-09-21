@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { QueryBuilder } from "../../../builder/QueryBuilder"
 import { TProduct } from "./product.interface"
 import { Product } from "./product.model"
@@ -6,18 +7,35 @@ const createProduct = async (product: TProduct) => {
   const newProduct = await Product.create(product)
   return newProduct
 }
+export const getAllProducts = async (payload: Record<string, unknown>) => {
+  console.log(payload)
 
-const getAllProducts = async (payload: Record<string, unknown>) => {
-  const productQuery = new QueryBuilder(Product.find({}), payload)
-  productQuery.search(["title", "description, category"])
-  productQuery.paginate()
-  productQuery.sort()
-  productQuery.fields()
-  productQuery.filter()
+  // Initialize QueryBuilder
+  const queryBuilder = new QueryBuilder(Product.find(), payload)
 
-  const products = await productQuery.modelQuery
+  // Apply search and filter criteria for products
+  queryBuilder.search(["title", "description"]).filter()
 
-  return products
+  // Count the total number of documents matching the search/filter criteria
+  const total = await Product.countDocuments(
+    queryBuilder.modelQuery.getFilter(),
+  )
+
+  // Apply pagination, sorting, and fields selection
+  const products = await queryBuilder
+    .paginate()
+    .sort()
+    .fields()
+    .modelQuery.exec()
+
+  return {
+    products,
+    pagination: {
+      total,
+      limit: Number(payload.limit || 10),
+      page: Number(payload.page || 1),
+    },
+  }
 }
 
 const getProductById = async (id: string) => {

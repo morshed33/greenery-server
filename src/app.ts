@@ -1,7 +1,6 @@
 import express, { Application, Request, Response } from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
-import config from "./config"
 import { ApiResponse } from "./utils/ApiResponse"
 import errorHandler from "./middlewares/errorHandler"
 import notFound from "./middlewares/notFound"
